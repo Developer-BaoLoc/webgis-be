@@ -6,6 +6,10 @@ import { WardsModule } from './modules/wards/wards.module';
 import { RoadsModule } from './modules/roads/roads.module';
 import { RiversModule } from './modules/rivers/rivers.module';
 import { CooperativesModule } from './modules/cooperatives/cooperatives.module';
+import { IrrigationsModule } from './modules/irrigations/irrigations.module';
+import { EffectiveModelsModule } from './modules/effective-models/effective-models.module';
+import { OcopEntitiesModule } from './modules/ocop-entities/ocop-entities.module';
+import { ProductionAreasModule } from './modules/production-areas/production-areas.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 
@@ -37,6 +41,10 @@ import { AuthModule } from './modules/auth/auth.module';
     RoadsModule,
     RiversModule,
     CooperativesModule,
+    IrrigationsModule,
+    EffectiveModelsModule,
+    OcopEntitiesModule,
+    ProductionAreasModule,
     UsersModule,
     AuthModule,
   ],
