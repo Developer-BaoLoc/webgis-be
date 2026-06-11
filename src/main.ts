@@ -14,12 +14,21 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      transform: true,
     }),
   );
 
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'https://*.ngrok-free.app',
+      'https://*.ngrok-free.dev',
+    ],
+    credentials: true,
+  });
 
-  const port = process.env.PORT || 3001;
+  const port =
+    process.env.PORT || process.env.APP_PORT || 3001;
 
   await app.listen(port);
 
