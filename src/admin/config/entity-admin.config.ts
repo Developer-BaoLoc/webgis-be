@@ -1,5 +1,13 @@
 export type GeometryKind = 'point' | 'polygon' | 'none';
 
+export interface EntityRelationConfig {
+  field: string;        // ví dụ: entity_id
+  table: string;        // ví dụ: ocop_entities
+  targetField: string;  // ví dụ: id
+  displayField: string; // ví dụ: name
+  alias: string;        // ví dụ: entity_name
+}
+
 export interface EntityAdminConfig {
   key: string;
   tableName: string;
@@ -10,6 +18,9 @@ export interface EntityAdminConfig {
   numericColumns?: string[];
   integerColumns?: string[];
   geoJsonProperties: string[];
+
+  // NEW (RELATION ENGINE)
+  relations?: EntityRelationConfig[];
 }
 
 const SHARED_AGRICULTURE_COLUMNS = [
@@ -41,10 +52,7 @@ const SHARED_AGRICULTURE_GEOJSON_PROPERTIES = [
   'status',
 ];
 
-export const ENTITY_ADMIN_CONFIGS: Record<
-  string,
-  EntityAdminConfig
-> = {
+export const ENTITY_ADMIN_CONFIGS: Record<string, EntityAdminConfig> = {
   cooperatives: {
     key: 'cooperatives',
     tableName: 'cooperatives',
@@ -52,16 +60,11 @@ export const ENTITY_ADMIN_CONFIGS: Record<
     geometry: 'point',
     columns: SHARED_AGRICULTURE_COLUMNS,
     requiredColumns: ['name'],
-    numericColumns: [
-      'area_ha',
-      'annual_cost',
-      'annual_income',
-      'annual_profit',
-    ],
+    numericColumns: ['area_ha', 'annual_cost', 'annual_income', 'annual_profit'],
     integerColumns: ['members'],
-    geoJsonProperties:
-      SHARED_AGRICULTURE_GEOJSON_PROPERTIES,
+    geoJsonProperties: SHARED_AGRICULTURE_GEOJSON_PROPERTIES,
   },
+
   'cooperative-groups': {
     key: 'cooperative-groups',
     tableName: 'cooperative_groups',
@@ -69,9 +72,9 @@ export const ENTITY_ADMIN_CONFIGS: Record<
     geometry: 'point',
     columns: SHARED_AGRICULTURE_COLUMNS,
     requiredColumns: ['name'],
-    geoJsonProperties:
-      SHARED_AGRICULTURE_GEOJSON_PROPERTIES,
+    geoJsonProperties: SHARED_AGRICULTURE_GEOJSON_PROPERTIES,
   },
+
   irrigations: {
     key: 'irrigations',
     tableName: 'irrigations',
@@ -79,18 +82,15 @@ export const ENTITY_ADMIN_CONFIGS: Record<
     geometry: 'point',
     columns: SHARED_AGRICULTURE_COLUMNS,
     requiredColumns: ['name'],
-    geoJsonProperties:
-      SHARED_AGRICULTURE_GEOJSON_PROPERTIES,
+    geoJsonProperties: SHARED_AGRICULTURE_GEOJSON_PROPERTIES,
   },
+
   'effective-models': {
     key: 'effective-models',
     tableName: 'effective_models',
     mediaEntityType: 'effective_model',
     geometry: 'point',
-    columns: [
-      ...SHARED_AGRICULTURE_COLUMNS,
-      'type',
-    ],
+    columns: [...SHARED_AGRICULTURE_COLUMNS, 'type'],
     requiredColumns: ['name'],
     geoJsonProperties: [
       'id',
@@ -103,6 +103,7 @@ export const ENTITY_ADMIN_CONFIGS: Record<
       'type',
     ],
   },
+
   'ocop-entities': {
     key: 'ocop-entities',
     tableName: 'ocop_entities',
@@ -118,15 +119,10 @@ export const ENTITY_ADMIN_CONFIGS: Record<
       'note',
     ],
     requiredColumns: ['name'],
-    geoJsonProperties: [
-      'id',
-      'name',
-      'representative',
-      'address',
-      'phone',
-      'status',
-    ],
+    geoJsonProperties: ['id', 'name', 'representative', 'address', 'phone', 'status'],
   },
+
+  // 🔥 UPDATED: OCOP PRODUCTS WITH RELATION
   'ocop-products': {
     key: 'ocop-products',
     tableName: 'ocop_products',
@@ -146,13 +142,22 @@ export const ENTITY_ADMIN_CONFIGS: Record<
       'annual_income',
       'annual_profit',
     ],
-    requiredColumns: [
-      'entity_id',
-      'product_name',
-    ],
+    requiredColumns: ['entity_id', 'product_name'],
     integerColumns: ['entity_id'],
     geoJsonProperties: [],
+
+    // 🔥 RELATION ENGINE ADDED
+    relations: [
+      {
+        field: 'entity_id',
+        table: 'ocop_entities',
+        targetField: 'id',
+        displayField: 'name',
+        alias: 'entity_name',
+      },
+    ],
   },
+
   'production-areas': {
     key: 'production-areas',
     tableName: 'production_areas',
@@ -160,14 +165,11 @@ export const ENTITY_ADMIN_CONFIGS: Record<
     geometry: 'polygon',
     columns: SHARED_AGRICULTURE_COLUMNS,
     requiredColumns: ['name'],
-    geoJsonProperties:
-      SHARED_AGRICULTURE_GEOJSON_PROPERTIES,
+    geoJsonProperties: SHARED_AGRICULTURE_GEOJSON_PROPERTIES,
   },
 };
 
-export function getEntityConfig(
-  key: string,
-): EntityAdminConfig {
+export function getEntityConfig(key: string): EntityAdminConfig {
   const config = ENTITY_ADMIN_CONFIGS[key];
 
   if (!config) {

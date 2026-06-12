@@ -21,8 +21,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://*.ngrok-free.app',
-      'https://*.ngrok-free.dev',
+      'http://192.168.1.34:3000',
     ],
     credentials: true,
   });
@@ -30,7 +29,7 @@ async function bootstrap() {
   const port =
     process.env.PORT || process.env.APP_PORT || 3001;
 
-  await app.listen(port);
+  await app.listen(3001, '0.0.0.0');
 
   console.log(`API running on port ${port}`);
 }
