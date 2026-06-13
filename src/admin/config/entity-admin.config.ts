@@ -60,7 +60,7 @@ export const ENTITY_ADMIN_CONFIGS: Record<string, EntityAdminConfig> = {
     geometry: 'point',
     columns: SHARED_AGRICULTURE_COLUMNS,
     requiredColumns: ['name'],
-    numericColumns: ['area_ha', 'annual_cost', 'annual_income', 'annual_profit'],
+    numericColumns: [ 'annual_cost', 'annual_income', 'annual_profit'],
     integerColumns: ['members'],
     geoJsonProperties: SHARED_AGRICULTURE_GEOJSON_PROPERTIES,
   },
